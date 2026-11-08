@@ -117,7 +117,8 @@ const loginSchema = z.object({
   username: z.string().trim().min(1).max(120),
   password: z.string().min(1).max(4096),
   adminToken: z.string().min(1).max(4096),
-  turnstileToken: z.string().min(1).max(4096).optional()
+  // The login page sends an empty string when Turnstile is not configured.
+  turnstileToken: z.preprocess((value) => (value === "" ? undefined : value), z.string().min(1).max(4096).optional())
 });
 
 type AdminAuth = {

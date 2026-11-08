@@ -191,6 +191,27 @@ describe("admin routes", () => {
     await expect(campaigns.json()).resolves.toEqual({ campaigns: [] });
   });
 
+  it("accepts browser login when Turnstile is off and the page sends an empty token", async () => {
+    const db = createSessionDb();
+    const sessionEnv = { ...(env as Record<string, unknown>), DB: db } as never;
+    const login = await app.request(
+      "/admin/session",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "User-Agent": "vitest" },
+        body: JSON.stringify({
+          username: "admin",
+          password: "test-admin-login-password",
+          adminToken: "test-admin-token-with-enough-entropy",
+          turnstileToken: ""
+        })
+      },
+      sessionEnv
+    );
+
+    expect(login.status).toBe(200);
+  });
+
   it("rejects oversized chunked admin login JSON without content-length", async () => {
     const chunk = new TextEncoder().encode("x".repeat(32 * 1024));
     const body = new ReadableStream<Uint8Array>({
