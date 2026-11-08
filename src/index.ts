@@ -260,10 +260,23 @@ app.post("/webhooks/meta", async (c) => {
 
 app.route("/admin", adminRoutes);
 
+// Secrets pasted into the Cloudflare dashboard can carry stray whitespace or a
+// trailing newline; trim every string binding once so comparisons and HTTP
+// headers see the intended value.
+function trimEnvStrings(env: Env): Env {
+  const record = env as unknown as Record<string, unknown>;
+  for (const key of Object.keys(record)) {
+    const value = record[key];
+    if (typeof value === "string" && value !== value.trim()) record[key] = value.trim();
+  }
+  return env;
+}
+
 export default {
-  fetch: app.fetch,
-  queue: processDeliveryBatch,
-  scheduled(controller, env, ctx) {
+  fetch: (request, env, ctx) => app.fetch(request, trimEnvStrings(env), ctx),
+  queue: (batch, env) => processDeliveryBatch(batch, trimEnvStrings(env)),
+  scheduled(controller, rawEnv, ctx) {
+    const env = trimEnvStrings(rawEnv);
     const repo = new Repository(env.DB);
     const meta = new MetaApiClient(env.INSTAGRAM_ACCOUNT_ID, env.INSTAGRAM_ACCESS_TOKEN);
     const work = scheduledWorkAt(controller.scheduledTime);
