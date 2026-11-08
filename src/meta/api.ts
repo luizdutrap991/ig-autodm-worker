@@ -100,7 +100,7 @@ export class MetaApiClient {
 
   async replyToComment(commentId: string, text: string): Promise<MetaSendResult> {
     const response = await fetch(
-      `https://graph.instagram.com/${this.apiVersion}/${encodeURIComponent(commentId)}/replies`,
+      `https://graph.facebook.com/${this.apiVersion}/${encodeURIComponent(commentId)}/replies`,
       {
         method: "POST",
         headers: {
@@ -115,7 +115,7 @@ export class MetaApiClient {
   }
 
   async getUserProfile(igUserId: string): Promise<{ isUserFollowBusiness: boolean | null }> {
-    const url = new URL(`https://graph.instagram.com/${this.apiVersion}/${encodeURIComponent(igUserId)}`);
+    const url = new URL(`https://graph.facebook.com/${this.apiVersion}/${encodeURIComponent(igUserId)}`);
     url.searchParams.set("fields", "is_user_follow_business");
 
     const response = await fetch(url, {
@@ -128,7 +128,7 @@ export class MetaApiClient {
   }
 
   async refreshLongLivedToken(token = this.accessToken): Promise<MetaTokenRefreshResult> {
-    const url = new URL("https://graph.instagram.com/refresh_access_token");
+    const url = new URL("https://graph.facebook.com/refresh_access_token");
     url.searchParams.set("grant_type", "ig_refresh_token");
     url.searchParams.set("access_token", token);
 
@@ -169,7 +169,7 @@ export class MetaApiClient {
     fields: string,
     limit: number
   ): Promise<{ ok: true; comments: MetaComment[] } | { ok: false; message: string }> {
-      const url = new URL(`https://graph.instagram.com/${this.apiVersion}/${encodeURIComponent(mediaId)}/comments`);
+      const url = new URL(`https://graph.facebook.com/${this.apiVersion}/${encodeURIComponent(mediaId)}/comments`);
     url.searchParams.set("fields", fields);
     url.searchParams.set("limit", String(Math.min(Math.max(Math.trunc(limit), 1), 50)));
 
@@ -191,7 +191,7 @@ export class MetaApiClient {
 
   private async postMessage(body: unknown): Promise<MetaSendResult> {
     const response = await fetch(
-      `https://graph.instagram.com/${this.apiVersion}/${encodeURIComponent(this.accountId)}/messages`,
+      `https://graph.facebook.com/${this.apiVersion}/${encodeURIComponent(this.accountId)}/messages`,
       {
         method: "POST",
         headers: {

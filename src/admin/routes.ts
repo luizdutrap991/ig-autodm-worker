@@ -340,7 +340,7 @@ function validMetaId(value: string): boolean {
 
 function graphUrl(pathSegments: string[], params: Record<string, string> = {}): URL {
   const safePath = pathSegments.map((segment) => encodeURIComponent(segment)).join("/");
-  const url = new URL(`https://graph.instagram.com/v25.0/${safePath}`);
+  const url = new URL(`https://graph.facebook.com/v25.0/${safePath}`);
   url.search = new URLSearchParams(params).toString();
   return url;
 }

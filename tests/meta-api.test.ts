@@ -205,7 +205,7 @@ describe("MetaApiClient", () => {
 
     expect(result).toEqual({ ok: true, messageId: "reply-1" });
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(url).toBe("https://graph.instagram.com/v25.0/comment-1/replies");
+    expect(url).toBe("https://graph.facebook.com/v25.0/comment-1/replies");
     expect(url).not.toContain("access_token");
     expect(init.method).toBe("POST");
     expect(init.headers).toEqual({
@@ -258,7 +258,7 @@ describe("MetaApiClient", () => {
 
   it("refreshes long-lived tokens through the documented refresh endpoint", async () => {
     const fetchMock = vi.fn(async (url: string) => {
-      expect(url).toContain("https://graph.instagram.com/refresh_access_token");
+      expect(url).toContain("https://graph.facebook.com/refresh_access_token");
       expect(url).toContain("grant_type=ig_refresh_token");
       expect(url).toContain("access_token=old-token");
       return Response.json({ access_token: "new-token", token_type: "bearer", expires_in: 5_184_000 });

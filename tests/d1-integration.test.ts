@@ -312,7 +312,7 @@ describe("D1 integration", () => {
       expect(message.ack).toHaveBeenCalledOnce();
       expect(message.retry).not.toHaveBeenCalled();
       expect(fetchMock).toHaveBeenCalledWith(
-        "https://graph.instagram.com/v25.0/ig-account/messages",
+        "https://graph.facebook.com/v25.0/ig-account/messages",
         expect.objectContaining({
           method: "POST",
           headers: {

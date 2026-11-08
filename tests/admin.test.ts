@@ -584,12 +584,12 @@ describe("admin routes", () => {
 
   it("lists recent Instagram media without exposing the access token", async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-      expect(url).toContain("graph.instagram.com/v25.0/ig-account/media");
+      expect(url).toContain("graph.facebook.com/v25.0/ig-account/media");
       expect(url).not.toContain("access_token");
       expect(init?.headers).toEqual({ Authorization: "Bearer ig-token" });
       return Response.json({
         data: [{ id: "media-1", permalink: "https://instagram.com/p/example/" }],
-        paging: { next: "https://graph.instagram.com/v25.0/ig-account/media?access_token=ig-token" }
+        paging: { next: "https://graph.facebook.com/v25.0/ig-account/media?access_token=ig-token" }
       });
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -957,13 +957,13 @@ describe("admin routes", () => {
 
   it("lists media comments without exposing paging URLs", async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-      expect(url).toContain("graph.instagram.com/v25.0/media-1/comments");
+      expect(url).toContain("graph.facebook.com/v25.0/media-1/comments");
       expect(url).toContain("fields=id%2Ctext%2Cusername%2Ctimestamp");
       expect(url).not.toContain("access_token");
       expect(init?.headers).toEqual({ Authorization: "Bearer ig-token" });
       return Response.json({
         data: [{ id: "comment-1", text: "PROMPT", username: "user-1", timestamp: "2026-05-07T07:42:01+0000" }],
-        paging: { next: "https://graph.instagram.com/v25.0/media-1/comments?access_token=ig-token" }
+        paging: { next: "https://graph.facebook.com/v25.0/media-1/comments?access_token=ig-token" }
       });
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -1012,12 +1012,12 @@ describe("admin routes", () => {
 
   it("checks Instagram webhook subscription without exposing access tokens", async () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-      expect(url).toContain("graph.instagram.com/v25.0/ig-account/subscribed_apps");
+      expect(url).toContain("graph.facebook.com/v25.0/ig-account/subscribed_apps");
       expect(url).not.toContain("access_token");
       expect(init?.headers).toEqual({ Authorization: "Bearer ig-token" });
       return Response.json({
         data: [{ id: "app-1", subscribed_fields: ["comments", "messages"], target_updates: { enabled: true } }],
-        paging: { next: "https://graph.instagram.com/v25.0/ig-account/subscribed_apps?access_token=ig-token" }
+        paging: { next: "https://graph.facebook.com/v25.0/ig-account/subscribed_apps?access_token=ig-token" }
       });
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -1143,7 +1143,7 @@ describe("admin routes", () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       expect(init?.method).toBe("POST");
       expect(init?.headers).toEqual({ Authorization: "Bearer ig-token" });
-      expect(url).toContain("graph.instagram.com/v25.0/ig-account/subscribed_apps");
+      expect(url).toContain("graph.facebook.com/v25.0/ig-account/subscribed_apps");
       expect(url).toContain("subscribed_fields=comments%2Cmessages%2Cmessaging_postbacks");
       expect(url).not.toContain("access_token");
       return Response.json({ success: true });
